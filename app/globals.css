@@ -107,8 +107,8 @@
   }
 
   .form-input {
-    @apply relative w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2 font-semibold text-gray-600 shadow-inner shadow-white focus-within:border-blue-500 focus-within:outline-none focus-within:ring focus-within:ring-blue-500 focus:border-2 focus:border-blue-500 focus:outline-none focus:ring-4 ring-offset-2 focus:ring-blue-500;
-    @apply dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:shadow-gray-700;
+    @apply relative w-full rounded-xl border border-gray-200 bg-gray-100 px-4 py-2 font-semibold text-gray-600 shadow-inner shadow-white focus-within:border-blue-500 focus-within:outline-none focus-within:ring focus-within:ring-blue-500  focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-blue-300;
+    @apply dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:shadow-gray-700 dark:focus:ring-offset-gray-900;
     @apply transition;
   }
 
