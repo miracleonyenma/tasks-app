@@ -108,6 +108,29 @@ const getOrgWithMembers = async (
 };
 
 /**
+ * Helper function to get members of an organization
+ */
+const getOrgMembers = async (orgId: string): Promise<DocumentData[]> => {
+  try {
+    const membershipQuery = query(
+      collection(db, "memberships"),
+      where("orgId", "==", orgId)
+    );
+
+    const membershipSnapshot = await getDocs(membershipQuery);
+
+    if (membershipSnapshot.empty) {
+      return [];
+    }
+
+    return membershipSnapshot.docs.map((doc) => doc.data());
+  } catch (error) {
+    console.error(`Error fetching members for org ${orgId}:`, error);
+    return [];
+  }
+};
+
+/**
  * Gets a single organization by ID with real-time updates
  */
 export const getOrgRealtime = (
@@ -167,29 +190,6 @@ export const getOrgRealtime = (
   );
 
   return unsubscribe;
-};
-
-/**
- * Helper function to get members of an organization
- */
-const getOrgMembers = async (orgId: string): Promise<DocumentData[]> => {
-  try {
-    const membershipQuery = query(
-      collection(db, "memberships"),
-      where("orgId", "==", orgId)
-    );
-
-    const membershipSnapshot = await getDocs(membershipQuery);
-
-    if (membershipSnapshot.empty) {
-      return [];
-    }
-
-    return membershipSnapshot.docs.map((doc) => doc.data());
-  } catch (error) {
-    console.error(`Error fetching members for org ${orgId}:`, error);
-    return [];
-  }
 };
 
 export default getUserOrgsRealtime;
