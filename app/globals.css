@@ -210,4 +210,24 @@
     @apply hover:ring-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800;
     @apply transition-all;
   }
+
+  .site-header {
+    @apply sticky top-0 z-50 flex items-center justify-between bg-white px-4 py-3 shadow-sm shadow-gray-200 dark:bg-gray-900 dark:shadow-gray-700;
+  }
+
+  .site-header .wrapper {
+    @apply w-full flex items-center gap-4 justify-between mx-auto max-w-5xl;
+  }
+
+  .user-btn {
+    @apply flex items-center gap-2;
+  }
+
+  .user-btn .img-cont {
+    @apply text-sm flex items-center gap-2 text-gray-400 dark:text-gray-500;
+  }
+
+  .user-btn .img-cont img {
+    @apply rounded-full shadow border border-gray-200 dark:border-gray-700;
+  }
 }
