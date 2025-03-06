@@ -12,10 +12,10 @@ import { TaskInput, TaskFormProps } from "@/types";
 import Loader from "@/components/Loader";
 import { doc, Timestamp, updateDoc } from "firebase/firestore";
 import createTask from "@/utils/firebase/task/createTask";
-import { formatDate } from "@/utils";
 import getOrgMembersRealtime, {
   OrgMember,
 } from "@/utils/firebase/org/getOrgMembers";
+import { getLocalDatetime } from "@/utils";
 
 const TaskForm = ({
   task,
@@ -32,7 +32,9 @@ const TaskForm = ({
     initialValues: {
       name: task?.name || "",
       description: task?.description || "",
-      dueDate: formatDate(task?.dueDate) || new Date(),
+      dueDate: getLocalDatetime(
+        new Date(task?.dueDate?.toString() || "") || new Date()
+      ),
       priority: task?.priority || "medium",
       status: task?.status || "todo",
       assignedTo: task?.assignedTo || "",
@@ -46,12 +48,12 @@ const TaskForm = ({
       description: Yup.string()
         .required("Description is required")
         .max(500, "Must be at most 500 characters"),
-      dueDate: Yup.date()
-        .required("Due date is required")
-        .min(
-          mode === "create" ? new Date() : undefined,
-          "Due date must be in the future"
-        ),
+      // dueDate: Yup.date()
+      //   .required("Due date is required")
+      //   .min(
+      //     mode === "create" ? new Date() : undefined,
+      //     "Due date must be in the future"
+      //   ),
       priority: Yup.string().required("Priority is required"),
       status: Yup.string().required("Status is required"),
       assignedTo: Yup.string().required("Assignee is required"),
@@ -67,19 +69,6 @@ const TaskForm = ({
       }
     },
   });
-
-  useEffect(() => {
-    // Use our new utility function for org members
-    const unsubscribe = getOrgMembersRealtime(
-      formik.values.orgId,
-      (members) => {
-        setOrgMembers(members);
-      }
-    );
-
-    // Cleanup on unmount
-    return () => unsubscribe();
-  }, [formik.values.orgId]);
 
   const handleCreateTask = async (values: typeof formik.values) => {
     if (!user?.uid) return;
@@ -143,6 +132,24 @@ const TaskForm = ({
       formik.setSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    // Use our new utility function for org members
+    const unsubscribe = getOrgMembersRealtime(
+      formik.values.orgId,
+      (members) => {
+        setOrgMembers(members);
+      }
+    );
+
+    // Cleanup on unmount
+    return () => unsubscribe();
+  }, [formik.values.orgId]);
+
+  useEffect(() => {
+    console.log({ task });
+    console.log({ values: formik.values });
+  }, [task, formik.values]);
 
   return (
     <form onSubmit={formik.handleSubmit}>
