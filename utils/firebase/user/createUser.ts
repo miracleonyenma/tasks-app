@@ -22,6 +22,7 @@ const createUser = async (userCredential: UserCredential) => {
     }
 
     const { uid, displayName, email, photoURL } = userCredential.user;
+    // Create a reference to the *user* document in Firestore
     const userRef = doc(db, "users", uid);
 
     // Check if user already exists in Firestore
