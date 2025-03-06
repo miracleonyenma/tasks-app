@@ -8,7 +8,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { TaskWithRelation } from "@/types";
 import Loader from "@/components/Loader";
 import TaskItem from "@/components/Task/Item";
-import getUserOrgTasksRealtime from "@/utils/firebase/task/getUserTasks";
+import getUserOrgTasksRealtime from "@/utils/firebase/task/getUserOrgTasksRealtime";
 
 const TaskList = ({ userOrgId }: { userOrgId: string }) => {
   const [user] = useAuthState(auth);
