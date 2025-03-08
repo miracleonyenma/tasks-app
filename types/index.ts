@@ -47,6 +47,7 @@ export interface FirestoreOrg {
   createdAt: Date | FieldValue; // Timestamp of organization creation
   updatedAt: Date | FieldValue; // Timestamp of last update
   members?: FirestoreMembership[]; // Optional list of members in the organization
+  createdBy: string; // ID of the user who created the organization
 }
 
 // Represents a user entity stored in Firestore.
