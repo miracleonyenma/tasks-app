@@ -49,12 +49,12 @@ const TaskForm = ({
       description: Yup.string()
         .required("Description is required")
         .max(500, "Must be at most 500 characters"),
-      // dueDate: Yup.date()
-      //   .required("Due date is required")
-      //   .min(
-      //     mode === "create" ? new Date() : undefined,
-      //     "Due date must be in the future"
-      //   ),
+      dueDate: Yup.date()
+        .required("Due date is required")
+        .min(
+          mode === "create" ? new Date() : undefined,
+          "Due date must be in the future"
+        ),
       priority: Yup.string().required("Priority is required"),
       status: Yup.string().required("Status is required"),
       assignedTo: Yup.string().required("Assignee is required"),
