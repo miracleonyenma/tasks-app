@@ -7,7 +7,7 @@ import { doc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
  * @param name - Name of the organization
  * @returns Promise with result message, success status, and organization data
  */
-const createOrg = async (name: string) => {
+const createOrg = async ({ name, user }: { name: string; user: string }) => {
   try {
     // Guard clause for missing name
     if (!name) {
@@ -29,6 +29,7 @@ const createOrg = async (name: string) => {
         name,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
+        createdBy: user,
       };
 
       await setDoc(orgRef, orgData);
