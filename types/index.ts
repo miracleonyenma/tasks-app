@@ -8,7 +8,7 @@ export interface TaskUpdateInput {
   name?: string; // Updated task name (optional)
   description?: string; // Updated task description (optional)
   dueDate?: Date | FieldValue; // Updated due date, can be a Date or Firestore FieldValue
-  priority?: number; // Updated priority level (optional)
+  priority?: string; // Updated priority level (optional)
   status?: string; // Updated task status (e.g., "open", "in-progress", "completed")
   assignedTo?: string; // User ID of the new assignee (optional)
   updatedBy: string; // ID of the user performing the update
