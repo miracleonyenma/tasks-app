@@ -7,10 +7,10 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "sonner";
-import { auth, db } from "@/firebase";
+import { auth } from "@/firebase";
 import { TaskInput, TaskFormProps } from "@/types";
 import Loader from "@/components/Loader";
-import { doc, Timestamp, updateDoc } from "firebase/firestore";
+import { Timestamp } from "firebase/firestore";
 import createTask from "@/utils/firebase/task/createTask";
 import getOrgMembersRealtime, {
   OrgMember,
