@@ -16,6 +16,7 @@ import getOrgMembersRealtime, {
   OrgMember,
 } from "@/utils/firebase/org/getOrgMembers";
 import { getLocalDatetime } from "@/utils";
+import updateTask from "@/utils/firebase/task/updateTask";
 
 const TaskForm = ({
   task,
@@ -110,15 +111,15 @@ const TaskForm = ({
     formik.setSubmitting(true);
 
     try {
-      const taskRef = doc(db, "tasks", task.id);
-      await updateDoc(taskRef, {
+      await updateTask({
+        taskId: task.id,
+        updatedBy: user.uid,
         name: values.name,
         description: values.description,
         dueDate: Timestamp.fromDate(new Date(values.dueDate)),
         priority: values.priority,
         status: values.status,
         assignedTo: values.assignedTo,
-        updatedAt: new Date(),
       });
 
       toast.success("Task updated successfully");

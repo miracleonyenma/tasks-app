@@ -41,7 +41,9 @@ const CreateOrgForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   });
 
   const handleCreateOrg = async (cb: (orgId: string) => void) => {
-    toast.promise(createOrg(formik.values.orgName), {
+    if (!user?.uid)
+      return toast.error("Please login to create an organization");
+    toast.promise(createOrg({ name: formik.values.orgName, user: user?.uid }), {
       loading: (() => {
         setLoading(true);
         return "Creating organization...";

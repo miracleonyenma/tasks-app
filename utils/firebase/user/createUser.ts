@@ -42,6 +42,15 @@ const createUser = async (userCredential: UserCredential) => {
       await setDoc(userRef, userData);
       console.log(`User created successfully: ${uid}`);
 
+      await fetch("/api/permit/sync-user", {
+        method: "POST",
+        body: JSON.stringify({
+          key: uid,
+          email: email || "",
+          first_name: displayName || "",
+        }),
+      });
+
       return {
         success: true,
         message: "User created successfully",

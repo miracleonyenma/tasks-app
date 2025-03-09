@@ -61,6 +61,38 @@ const createTask = async (taskInput: TaskInput) => {
     await setDoc(taskRef, taskWithTimestamps);
     console.log(`Task created successfully: ${taskInput.name}`);
 
+    // create resorce instance for the task
+    await fetch("/api/permit/create-resource-instance", {
+      method: "POST",
+      body: JSON.stringify({
+        key: taskRef.id,
+        resource: "Task",
+        tenant: "default",
+      }),
+    });
+
+    // assign role of task admin to the user
+    await fetch("/api/permit/assign-role", {
+      method: "POST",
+      body: JSON.stringify({
+        user: taskInput.createdBy,
+        role: "admin",
+        resource_type: "Task",
+        resource_instance: taskRef.id,
+      }),
+    });
+
+    // assign role of task assignee to the user
+    await fetch("/api/permit/assign-role", {
+      method: "POST",
+      body: JSON.stringify({
+        user: taskInput.assignedTo,
+        role: "assignee",
+        resource_type: "Task",
+        resource_instance: taskRef.id,
+      }),
+    });
+
     return {
       success: true,
       message: "Task created successfully",

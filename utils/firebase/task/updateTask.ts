@@ -62,6 +62,17 @@ const updateTask = async (taskUpdateInput: TaskUpdateInput) => {
     await updateDoc(taskRef, updateData);
     console.log(`Task updated successfully: ${taskId}`);
 
+    // assign role of task assignee to the user
+    await fetch("/api/permit/assign-role", {
+      method: "POST",
+      body: JSON.stringify({
+        user: taskUpdateInput.assignedTo,
+        role: "assignee",
+        resource_type: "Task",
+        resource_instance: taskRef.id,
+      }),
+    });
+
     return {
       success: true,
       message: "Task updated successfully",

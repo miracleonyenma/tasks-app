@@ -17,6 +17,7 @@
     "formik": "^2.4.6",
     "motion": "^12.4.7",
     "next": "15.1.7",
+    "permitio": "^2.7.2-rc",
     "postcss": "^8.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

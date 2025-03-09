@@ -79,6 +79,17 @@ const createMember = async (membershipInput: MembershipInput) => {
     await setDoc(membershipRef, membershipData);
     console.log(`Membership created successfully: ${membershipId}`);
 
+    // assign role to user
+    await fetch("/api/permit/assign-role", {
+      method: "POST",
+      body: JSON.stringify({
+        role: "member",
+        user: userId,
+        resource_instance: orgId,
+        resource_type: "Organization",
+      }),
+    });
+
     return {
       success: true,
       message: "Membership created successfully",

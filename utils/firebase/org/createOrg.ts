@@ -41,6 +41,27 @@ const createOrg = async ({ name, user }: { name: string; user: string }) => {
 
       const newOrgData = { ...newOrgSnap.data(), id: newOrgSnap.id };
 
+      // create resorce instance for the org
+      await fetch("/api/permit/create-resource-instance", {
+        method: "POST",
+        body: JSON.stringify({
+          key: newOrgData.id,
+          resource: "Organization",
+          tenant: "default",
+        }),
+      });
+
+      // assign role of org admin to the user
+      await fetch("/api/permit/assign-role", {
+        method: "POST",
+        body: JSON.stringify({
+          user,
+          role: "admin",
+          resource_type: "Organization",
+          resource_instance: newOrgData.id,
+        }),
+      });
+
       return {
         success: true,
         message: "Organization created successfully",
