@@ -79,7 +79,9 @@ const AddMemberForm: React.FC<{
           onClose();
           return "User added to organization successfully";
         },
-        error: "Error adding user to organization",
+        error: (error) => {
+          return error.message;
+        },
         finally: () => {
           setLoading(false);
         },
