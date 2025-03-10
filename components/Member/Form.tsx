@@ -71,6 +71,8 @@ const AddMemberForm: React.FC<{
           return "Adding user to organization...";
         })(),
         success: (data) => {
+          if (!data.success) throw new Error(data.message);
+
           console.log({ data });
           onClose();
           return "User added to organization successfully";
