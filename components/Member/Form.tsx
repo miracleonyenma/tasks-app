@@ -42,6 +42,8 @@ const AddMemberForm: React.FC<{
     toast.promise(getUserByEmail(email), {
       loading: "Checking if user exists...",
       success: (data) => {
+        if (!data.success) throw new Error(data.message);
+
         if (data.success && data.user) {
           cb(orgId, data.user.id);
           return "User exists";
