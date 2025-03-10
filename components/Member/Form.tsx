@@ -42,6 +42,8 @@ const AddMemberForm: React.FC<{
     toast.promise(getUserByEmail(email), {
       loading: "Checking if user exists...",
       success: (data) => {
+        if (!data.success) throw new Error(data.message);
+
         if (data.success && data.user) {
           cb(orgId, data.user.id);
           return "User exists";
@@ -71,6 +73,8 @@ const AddMemberForm: React.FC<{
           return "Adding user to organization...";
         })(),
         success: (data) => {
+          if (!data.success) throw new Error(data.message);
+
           console.log({ data });
           onClose();
           return "User added to organization successfully";

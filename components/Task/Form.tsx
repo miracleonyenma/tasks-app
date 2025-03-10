@@ -90,7 +90,9 @@ const TaskForm = ({
         setLoading(true);
         return "Creating task...";
       })(),
-      success: () => {
+      success: (data) => {
+        if (!data.success) throw new Error(data.message);
+
         formik.resetForm();
         if (onSuccess) onSuccess();
         if (onClose) onClose();
