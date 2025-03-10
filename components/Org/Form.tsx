@@ -54,7 +54,9 @@ const CreateOrgForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         cb(data.org?.id);
         return "Organization created successfully";
       },
-      error: "Error creating organization",
+      error: (error) => {
+        return error.message;
+      },
       finally: () => {
         setLoading(false);
         formik.setSubmitting(false);
@@ -72,7 +74,9 @@ const CreateOrgForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         console.log({ data });
         return "User added to organization successfully";
       },
-      error: "Error adding user to organization",
+      error: (error) => {
+        return error.message;
+      },
       finally: () => {
         setLoading(false);
         formik.setSubmitting(false);
