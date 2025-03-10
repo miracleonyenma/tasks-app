@@ -52,7 +52,9 @@ const CreateOrgForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       success: (data) => {
         console.log({ data });
         if (!data.success) throw new Error(data.message);
-        cb(data.org?.id);
+        setTimeout(() => {
+          cb(data.org?.id);
+        }, 1000);
         return "Organization created successfully";
       },
       error: (error) => {
