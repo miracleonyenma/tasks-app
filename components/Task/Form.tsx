@@ -52,7 +52,11 @@ const TaskForm = ({
       dueDate: Yup.date()
         .required("Due date is required")
         .min(
-          mode === "create" ? new Date() : undefined,
+          mode === "create"
+            ? new Date()
+            : getLocalDatetime(
+                new Date(task?.dueDate?.toString() || "") || new Date()
+              ),
           "Due date must be in the future"
         ),
       priority: Yup.string().required("Priority is required"),
