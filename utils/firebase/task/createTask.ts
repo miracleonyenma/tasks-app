@@ -11,6 +11,20 @@ import { doc, setDoc, serverTimestamp, collection } from "firebase/firestore";
  */
 const createTask = async (taskInput: TaskInput) => {
   try {
+    // check if user has permission to create task
+    const check = await (
+      await fetch("/api/permit/check", {
+        method: "POST",
+        body: JSON.stringify({
+          user: taskInput.createdBy,
+          action: "create",
+          resource: "Task",
+        }),
+      })
+    ).json();
+
+    if (!check) throw new Error("User does not have permission to create task");
+
     // Guard clause for missing required data
     if (
       !taskInput?.name ||
@@ -90,6 +104,16 @@ const createTask = async (taskInput: TaskInput) => {
         role: "assignee",
         resource_type: "Task",
         resource_instance: taskRef.id,
+      }),
+    });
+
+    // create relationship between task and org
+    await fetch("/api/permit/create-relationship", {
+      method: "POST",
+      body: JSON.stringify({
+        subject: `Organization:${taskInput.orgId}`,
+        relation: "parent",
+        object: `Task:${taskRef.id}`,
       }),
     });
 

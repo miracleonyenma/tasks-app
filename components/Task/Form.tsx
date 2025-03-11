@@ -133,7 +133,7 @@ const TaskForm = ({
       if (onClose) onClose();
     } catch (error) {
       console.error("Error updating task:", error);
-      toast.error("Failed to update task");
+      toast.error("Failed to update task: " + (error as Error).message);
     } finally {
       setLoading(false);
       formik.setSubmitting(false);

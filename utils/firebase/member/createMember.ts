@@ -10,6 +10,19 @@ import { doc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
  * @returns Promise with result message and success status
  */
 const createMember = async (membershipInput: MembershipInput) => {
+  // check if user has permission to create membership
+  const check = await (
+    await fetch("/api/permit/check", {
+      method: "POST",
+      body: JSON.stringify({
+        user: membershipInput.invitedBy,
+        action: "update",
+        resource: `Organization:${membershipInput.orgId}`,
+      }),
+    })
+  ).json();
+
+  if (!check) throw new Error("User does not have permission to add a member");
   try {
     // Guard clause for missing essential data
     if (!membershipInput?.orgId || !membershipInput?.userId) {

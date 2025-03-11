@@ -5,13 +5,16 @@ import { TaskItemProps } from "@/types";
 import VaulDrawer from "../Drawer";
 import { toast } from "sonner";
 import { updateDoc, doc, deleteDoc } from "firebase/firestore";
-import { db } from "@/firebase";
+import { auth, db } from "@/firebase";
 import TaskForm from "@/components/Task/Form";
 import Loader from "@/components/Loader";
 import { formatDate } from "@/utils";
 import { formatStatus } from "@/utils/task";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const TaskItem = ({ task }: TaskItemProps) => {
+  const [user] = useAuthState(auth);
+
   const [isUpdateDrawerOpen, setIsUpdateDrawerOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -34,13 +37,26 @@ const TaskItem = ({ task }: TaskItemProps) => {
   const deleteTask = async () => {
     if (confirm("Are you sure you want to delete this task?")) {
       try {
+        const check = await (
+          await fetch("/api/permit/check", {
+            method: "POST",
+            body: JSON.stringify({
+              user: user?.uid,
+              action: "delete",
+              resource: `Task:${task.id}`,
+            }),
+          })
+        ).json();
+
+        if (!check)
+          throw new Error("User does not have permission to delete task");
         setIsDeleting(true);
         const taskRef = doc(db, "tasks", task.id);
         await deleteDoc(taskRef);
         toast.success("Task deleted successfully");
       } catch (error) {
         console.error("Error deleting task:", error);
-        toast.error("Failed to delete task");
+        toast.error("Failed to delete task: " + (error as Error).message);
       } finally {
         setIsDeleting(false);
       }
@@ -130,7 +146,11 @@ const TaskItem = ({ task }: TaskItemProps) => {
         {/* Edit & Delete Actions */}
         <div className="flex gap-2 ml-auto">
           <button
-            onClick={() => setIsUpdateDrawerOpen(true)}
+            onClick={() => {
+              setIsUpdateDrawerOpen(true);
+
+              console.log({ task });
+            }}
             className="btn sm"
           >
             Edit

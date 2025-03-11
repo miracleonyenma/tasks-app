@@ -22,8 +22,9 @@ const getUserOrgTasksRealtime = (
   // Query for tasks in the specified org that involve this user
   const tasksQuery = query(
     collection(db, "tasks"),
-    where("orgId", "==", orgId),
-    where("participants", "array-contains", userId)
+    where("orgId", "==", orgId)
+    // // uncomment below to only get tasks created by or assigned to the user
+    // where("participants", "array-contains", userId)
   );
 
   // Set up real-time listener

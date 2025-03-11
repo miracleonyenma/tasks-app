@@ -10,6 +10,19 @@ import { doc, updateDoc, serverTimestamp, getDoc } from "firebase/firestore";
  * @returns Promise with result message and success status
  */
 const updateTask = async (taskUpdateInput: TaskUpdateInput) => {
+  // check if user has permission to update task
+  const check = await (
+    await fetch("/api/permit/check", {
+      method: "POST",
+      body: JSON.stringify({
+        user: taskUpdateInput.updatedBy,
+        action: "update",
+        resource: `Task:${taskUpdateInput.taskId}`,
+      }),
+    })
+  ).json();
+
+  if (!check) throw new Error("User does not have permission to update task");
   try {
     // Guard clause for missing essential data
     if (!taskUpdateInput?.taskId || !taskUpdateInput?.updatedBy) {

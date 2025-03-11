@@ -42,12 +42,23 @@ const createUser = async (userCredential: UserCredential) => {
       await setDoc(userRef, userData);
       console.log(`User created successfully: ${uid}`);
 
+      // Sync user with Permit
       await fetch("/api/permit/sync-user", {
         method: "POST",
         body: JSON.stringify({
           key: uid,
           email: email || "",
           first_name: displayName || "",
+        }),
+      });
+
+      // assign role of editor to the user
+      await fetch("/api/permit/assign-role", {
+        method: "POST",
+        body: JSON.stringify({
+          user: uid,
+          role: "user",
+          tenant: "default",
         }),
       });
 

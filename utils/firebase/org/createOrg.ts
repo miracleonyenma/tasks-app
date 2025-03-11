@@ -9,6 +9,20 @@ import { doc, setDoc, serverTimestamp, getDoc } from "firebase/firestore";
  */
 const createOrg = async ({ name, user }: { name: string; user: string }) => {
   try {
+    // check if user has permission to create org
+    const check = await (
+      await fetch("/api/permit/check", {
+        method: "POST",
+        body: JSON.stringify({
+          user,
+          action: "create",
+          resource: "Organization",
+        }),
+      })
+    ).json();
+
+    if (!check) throw new Error("User does not have permission to create org");
+
     // Guard clause for missing name
     if (!name) {
       console.error("Invalid organization name provided");

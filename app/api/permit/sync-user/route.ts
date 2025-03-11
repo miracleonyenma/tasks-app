@@ -1,3 +1,5 @@
+// ./app/api/permit/sync-user/route.ts
+
 import permit from "@/lib/permit";
 import { NextResponse } from "next/server";
 
