@@ -1,6 +1,6 @@
 // Format the status for display
 const formatStatus = (status: string) =>
-  status === "todo"
+  status == "todo"
     ? "To Do"
     : status === "in-progress"
     ? "In Progress"
