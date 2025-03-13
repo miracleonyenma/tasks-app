@@ -1,36 +1,102 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Task Management App
 
-## Getting Started
+## Overview
+This is an example project demonstrating multi-tenant task management with **Role-Based Access Control (RBAC)** and **Relationship-Based Access Control (ReBAC)**. Users can:
+- Sign in with Google authentication
+- Create and manage organizations
+- Add and manage members
+- Assign and manage tasks with different permission levels
 
-First, run the development server:
+## Features
+- **Multi-Tenancy**: Users can belong to multiple organizations, each with its own tasks and members.
+- **Google Authentication**: Secure login via Firebase Authentication.
+- **Real-Time Updates**: Changes to tasks, organizations, and memberships sync instantly via Firestore.
+- **Access Control**:
+  - **Org Owners (Admins)** have full control over tasks created within the organization.
+  - **Task Creators** have full control over the tasks they create.
+  - **Task Assignees** can view and update their assigned tasks.
+  - **Org Members** have read-only access to tasks in their organization.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Installation & Setup
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/miracleonyenma/tasks-app.git
+   ```
+2. Install dependencies:
+   ```sh
+   cd tasks-app
+   npm install
+   ```
+3. Set up Firebase:
+   - Create a `.env.local` file and add your Firebase credentials:
+     ```env
+     NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
+     NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-auth-domain
+     NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+     NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-storage-bucket
+     NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-messaging-sender-id
+     NEXT_PUBLIC_FIREBASE_APP_ID=your-app-id
+     NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your-measurement-id
+     ```
+4. Run the development server:
+   ```sh
+   npm run dev
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Key Utilities
+### Task Status Formatting
+Located in `./utils/task/index.ts`:
+- [`formatStatus`](https://github.com/miracleonyenma/tasks-app/blob/main/utils/task/index.ts#L2): Converts task status codes into user-friendly display text (e.g., "todo" → "To Do").
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Firebase User Management
+Located in `./utils/firebase/user/`:
+- [`createUser`](https://github.com/miracleonyenma/tasks-app/blob/main/utils/firebase/user/createUser.ts#L13): Creates a new user record in Firestore after authentication.
+- [`getUserByEmail`](https://github.com/miracleonyenma/tasks-app/blob/main/utils/firebase/user/getUserByEmail.ts#L9): Retrieves user information using their email address.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Organization Management
+Located in `./utils/firebase/org/`:
+- [`createOrg`](https://github.com/miracleonyenma/tasks-app/blob/main/utils/firebase/org/createOrg.ts#L10): Creates a new organization in Firestore.
+- [`getUserOrgsRealtime`](https://github.com/miracleonyenma/tasks-app/blob/main/utils/firebase/org/getUserOrgs.ts#L19): Sets up real-time listeners for organizations a user belongs to.
+- [`getOrgRealtime`](https://github.com/miracleonyenma/tasks-app/blob/main/utils/firebase/org/getUserOrgs.ts#L136): Provides real-time updates for a specific organization.
+- [`getOrgMembersRealtime`](https://github.com/miracleonyenma/tasks-app/blob/main/utils/firebase/org/getOrgMembers.ts#L25): Provides real-time updates for organization membership.
 
-## Learn More
+### Task Management
+Located in `./utils/firebase/task/`:
+- [`createTask`](https://github.com/miracleonyenma/tasks-app/blob/main/utils/firebase/task/createTask.ts#L12): Creates a new task in Firestore.
+- [`updateTask`](https://github.com/miracleonyenma/tasks-app/blob/main/utils/firebase/task/updateTask.ts#L12): Updates an existing task's details.
+- [`getUserOrgTasksRealtime`](https://github.com/miracleonyenma/tasks-app/blob/main/utils/firebase/task/getUserOrgTasksRealtime.ts#L15): Provides real-time updates for tasks associated with a user in a specific organization.
 
-To learn more about Next.js, take a look at the following resources:
+### Membership Management
+Located in `./utils/firebase/member/`:
+- [`createMember`](https://github.com/miracleonyenma/tasks-app/blob/main/utils/firebase/member/createMember.ts#L12): Creates a new membership record linking a user to an organization.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Key Components
+### Site Components
+- [`./components/Site/Header.tsx`](https://github.com/miracleonyenma/tasks-app/blob/main/components/Site/Header.tsx): The main navigation header that handles authentication and sign-in/sign-out functionality.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Organization Components
+- [`./components/Org/List.tsx`](https://github.com/miracleonyenma/tasks-app/blob/main/components/Org/List.tsx): Displays a grid of organizations the user belongs to with real-time updates.
+- [`./components/Org/Card.tsx`](https://github.com/miracleonyenma/tasks-app/blob/main/components/Org/Card.tsx): Individual organization card showing details and actions.
+- [`./components/Org/Form.tsx`](https://github.com/miracleonyenma/tasks-app/blob/main/components/Org/Form.tsx): Form for creating new organizations with validation.
 
-## Deploy on Vercel
+### Task Components
+- [`./components/Task/List.tsx`](https://github.com/miracleonyenma/tasks-app/blob/main/components/Task/List.tsx): Displays tasks for a specific organization with real-time updates.
+- [`./components/Task/Item.tsx`](https://github.com/miracleonyenma/tasks-app/blob/main/components/Task/Item.tsx): Individual task card showing details and actions.
+- [`./components/Task/Form.tsx`](https://github.com/miracleonyenma/tasks-app/blob/main/components/Task/Form.tsx): Form for creating and editing tasks with validation.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Member Components
+- [`./components/Member/Form.tsx`](https://github.com/miracleonyenma/tasks-app/blob/main/components/Member/Form.tsx): Form for adding new members to an organization.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## What is Relationship-Based Access Control (ReBAC)?
+ReBAC is an advanced access control model that assigns permissions based on **relationships** rather than static roles. This is essential for:
+- **Multi-Tenant Organizations**: Ensuring that only members of an organization can interact with its tasks.
+- **Granular Permissions**: Allowing dynamic permission assignment, such as organization owners having admin rights over all tasks created within their organization.
+
+## Why ReBAC in This App?
+While RBAC ensures role-based access (e.g., "admin," "member"), ReBAC enables **contextual permissions**. For example:
+- Org **owners** are automatically admins for tasks created within their organization.
+- Org **members** have read-only access to tasks within their organization without needing explicit assignment.
+
+## License
+This project is open-source and available under the [MIT License](LICENSE).
+
